@@ -3,12 +3,20 @@ import pickle
 import tensorflow as tf
 import numpy as np
 from corpus import Vocabulary, Corpus
-from utils import assemble_emb_mat
+from utils import assemble_emb_mat, download
 from lm import LM
+from pathlib import Path
+
 
 def download_data():
-	emb_url = "http://lnsigo.mipt.ru/export/embeddings/lenta_lower_100.bin"
-	lenta_corp_url = ''
+	emb_url = 'http://lnsigo.mipt.ru/export/embeddings/ft_ru_subs_100.bin'
+	data_url = 'http://lnsigo.mipt.ru/export/datasets/subs.pckl'
+	fname_emb = 'ft_ru_subs_100.bin'
+	fname_data = 'subs.pckl'
+	if not Path(fname_emb).exists():
+		download(fname_emb, emb_url)
+	if not Path(fname_data).exists():
+		download(fname_data, data_url)
 
 
 @click.command()
@@ -22,8 +30,9 @@ def download_data():
 @click.option('--n-hidden', default=256, help='number of hidden units')
 @click.option('--model-name', prompt='Model name to save', help='name to save model parameters and summary')
 def train(lr, max_toks, gpu, every_n, bidirectional, layers, emb_dim, n_hidden, model_name):
+    download_data()
     data_file = 'subs.pckl'
-    emb_file = 'ft_ru_subs_100.bin'
+    emb_file = 'ft_ru_subs_100.bin' # Fasttext file
 
     print('Reading dataset')
     with open(data_file, 'rb') as f:
