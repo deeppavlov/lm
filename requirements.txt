@@ -1,0 +1,5 @@
+tensorflow-gpu==1.4.0
+click==6.7
+git+https://github.com/facebookresearch/fastText.git@3872afadb3a9f30de7c7792ff2ff1bda64242097
+requests==2.18.4
+tqdm==4.19.5
